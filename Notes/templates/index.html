@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Enable dark mode via class strategy
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        .nav-item {
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            left: 0;
+            bottom: -2px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        .fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% {opacity:0; transform:translateY(20px);}
+            100% {opacity:1; transform:translateY(0);}
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-500">
+
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 dark:bg-gray-800 shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <span class="text-white text-2xl animate-bounce">📝</span>
+                    <span class="text-white font-bold text-2xl tracking-wide fade-in">Smart Notes</span>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle"
+                        class="px-3 py-1 rounded-full bg-white dark:bg-gray-700 text-indigo-600 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">
+                        🌗
+                    </button>
+
+                    <a href="{% url 'login' %}" class="nav-item px-4 py-2 rounded-lg bg-white dark:bg-gray-700 text-indigo-600 dark:text-gray-100 font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">
+                        Login
+                    </a>
+
+                    <a href="{% url 'register' %}" class="nav-item px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-semibold transition-all">
+                        Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-28 bg-white dark:bg-gray-800 py-20 fade-in shadow-md">
+        <div class="max-w-5xl mx-auto text-center px-4">
+            <h1 class="text-5xl font-extrabold mb-6">Organize Your Thoughts with Smart Notes</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                AI-powered note-taking application that helps you create, summarize, and manage notes efficiently.
+            </p>
+            <a href="{% url 'register' %}"
+               class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-lg transition-all">
+                Get Started
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="max-w-7xl mx-auto py-16 px-4 grid md:grid-cols-3 gap-8 text-center">
+        <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:scale-105 transition-all duration-300">
+            <h2 class="text-2xl font-semibold mb-2">📝 Create Notes</h2>
+            <p class="text-gray-600 dark:text-gray-200">
+                Easily add and organize your notes in one central place.
+            </p>
+        </div>
+        <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:scale-105 transition-all duration-300">
+            <h2 class="text-2xl font-semibold mb-2">🔍 Summarize</h2>
+            <p class="text-gray-600 dark:text-gray-200">
+                Generate AI-powered summaries to quickly review your notes.
+            </p>
+        </div>
+        <div class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:scale-105 transition-all duration-300">
+            <h2 class="text-2xl font-semibold mb-2">🔐 Secure</h2>
+            <p class="text-gray-600 dark:text-gray-200">
+                Your notes are protected with authentication and stored safely.
+            </p>
+        </div>
+    </section>
+
+    <!-- Add Notes CTA -->
+    <section class="max-w-6xl mx-auto py-16 px-4 bg-indigo-50 dark:bg-gray-900 rounded-lg shadow-lg fade-in">
+        <div class="text-center">
+            <h2 class="text-4xl font-bold mb-4">Start Taking Notes Now</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">
+                Keep track of your ideas, tasks, and important information.
+            </p>
+            <a href="{% url 'add_note' %}"
+               class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-lg transition-all">
+               Add Your First Note
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 dark:bg-gray-900 text-gray-300 py-6 mt-12 text-center">
+        <p>&copy; 2025 Smart Notes. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Initialize theme
+        const htmlEl = document.documentElement;
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        if(localStorage.getItem('theme') === 'dark') {
+            htmlEl.classList.add('dark');
+        } else {
+            htmlEl.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if(htmlEl.classList.contains('dark')){
+                htmlEl.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlEl.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+
+</body>
+</html>

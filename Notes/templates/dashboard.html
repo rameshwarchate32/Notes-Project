@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Smart Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+        /* Fade-in animation for card */
+        .fade-in { animation: fadeIn 1s ease-in-out; }
+        @keyframes fadeIn { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* Button bounce hover */
+        .bounce:hover { transform: translateY(-3px); transition: transform 0.3s ease-in-out; }
+
+        /* Message fade-in */
+        .msg-fade { animation: fadeMsg 1s ease-in-out; }
+        @keyframes fadeMsg { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* Message fade-out */
+        .fade-out { opacity: 0; transition: opacity 1s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-500 flex items-center justify-center min-h-screen">
+
+    <!-- Dashboard Card -->
+    <div class="w-full max-w-3xl p-8 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl fade-in border-t-4 border-indigo-500">
+
+        <!-- Django Messages -->
+        {% if messages %}
+        <div id="messages-container" class="mb-4">
+            {% for message in messages %}
+            <div class="msg-fade p-3 rounded-lg text-white {% if message.tags == 'success' %} bg-green-500 {% elif message.tags == 'error' %} bg-red-500 {% else %} bg-blue-500 {% endif %} shadow-md mb-2">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 animate-fade-in">
+                Welcome, {{ student.name }} 🎉
+            </h2>
+            <button id="theme-toggle" class="px-3 py-1 rounded-full bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 hover:scale-110 transition-transform">
+                🌗
+            </button>
+        </div>
+
+        <!-- Student Info -->
+        <div class="space-y-3 mb-8">
+            <p class="text-gray-700 dark:text-gray-300">
+                <span class="font-semibold">Email:</span> {{ student.email }}
+            </p>
+            <p class="text-gray-700 dark:text-gray-300">
+                <span class="font-semibold">Address:</span> {{ student.address }}
+            </p>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="{% url 'notes_list' %}"
+               class="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg flex justify-center items-center space-x-2 bounce transition-all duration-300">
+                <span class="text-xl animate-bounce">📝</span>
+                <span>View Notes</span>
+            </a>
+
+            <a href="{% url 'add_note' %}"
+               class="px-6 py-3 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-semibold rounded-xl shadow-lg flex justify-center items-center space-x-2 bounce transition-all duration-300">
+                <span class="text-xl animate-bounce">➕</span>
+                <span>Add Note</span>
+            </a>
+
+            <a href="{% url 'logout' %}"
+               class="px-6 py-3 bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold rounded-xl shadow-lg flex justify-center items-center space-x-2 bounce transition-all duration-300">
+                <span class="text-xl animate-bounce">🚪</span>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Dark/light mode toggle
+        const htmlEl = document.documentElement;
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        if(localStorage.getItem('theme') === 'dark') {
+            htmlEl.classList.add('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            htmlEl.classList.toggle('dark');
+            localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Auto-hide messages after 3 seconds
+        setTimeout(() => {
+            const messages = document.getElementById('messages-container');
+            if(messages) {
+                messages.classList.add('fade-out');
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
